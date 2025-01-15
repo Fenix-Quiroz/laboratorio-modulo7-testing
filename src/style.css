@@ -14,19 +14,19 @@
   -webkit-text-size-adjust: 100%;
 }
 
-#nueva-partida{
+#nueva-partida {
   display: none;
 }
-#boton-supuesta-siguiente-carta{
+#boton-supuesta-siguiente-carta {
   display: none;
 }
-#puntuacion{
+#puntuacion {
   font-size: 20px;
 }
-.texto-aleatorio{
+.texto-aleatorio {
   font-size: 18px;
 }
-.botones{
+.botones {
   display: flex;
   justify-content: center;
   gap: 10px;

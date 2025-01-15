@@ -1,6 +1,7 @@
 //Mostrar puntuacion
 let puntuacion: number = 0;
 const MAXIMA_PUNTUACION: number = 7.5;
+
 const botonNuevaPartida = document.getElementById("nueva-partida");
 const muestraPuntuacion = (): void => {
   const elementoPuntuacion = document.getElementById("puntuacion");
@@ -10,9 +11,6 @@ const muestraPuntuacion = (): void => {
 };
 document.addEventListener("DOMContentLoaded", muestraPuntuacion);
 
-const botonMostrarCartaSiHubieraSeguido = document.getElementById(
-  "boton-supuesta-siguiente-carta"
-);
 //Pedir carta
 const cartaAleatoria = (): number => {
   let carta: number = Math.floor(Math.random() * 11);
@@ -23,101 +21,103 @@ const dameNumeroCarta = (numeroAleatorio: number): number => {
   if (numeroAleatorio === 0) {
     return numeroAleatorio + 1;
   }
-  if (numeroAleatorio > 7) {
+  if (numeroAleatorio === 8) {
     return numeroAleatorio + 2;
+  }
+  if (numeroAleatorio === 9) {
+    return numeroAleatorio + 1;
   }
   return numeroAleatorio;
 };
 
 const dameCarta = (): void => {
   const numeroAleatorio = cartaAleatoria();
-  const CARTA = dameNumeroCarta(numeroAleatorio);
-  sumarPuntuacion(CARTA);
-  cartas(CARTA);
-  gameOver();
-  mensajeGanaste();
+  const carta = dameNumeroCarta(numeroAleatorio);
+  const puntosCarta = obtenerPuntuacionCarta(carta);
+  const puntosSumados = sumarPuntuacion(puntosCarta);
+  actualizarPuntuacion(puntosSumados);
+  muestraPuntuacion();
+  const urlCarta = obtenerUrlCarta(carta);
+  mostrarCarta(urlCarta);
+  gestionarPartida();
 };
+
 const botonDameCarta = document.getElementById("dame-carta");
-botonDameCarta?.addEventListener("click", dameCarta);
+if (botonDameCarta instanceof HTMLButtonElement) {
+  botonDameCarta.addEventListener("click", dameCarta);
+}
 
 //Mostrar carta
 
-const cartas = (carta: number): void => {
+const obtenerUrlCarta = (carta: number): string => {
   let urlCarta = "";
-  let alt = "";
   switch (carta) {
     case 1:
       urlCarta =
         "https://raw.githubusercontent.com/Lemoncode/fotos-ejemplos/main/cartas/copas/1_as-copas.jpg";
-      alt = "Carta As de copas";
       break;
     case 2:
       urlCarta =
         "https://raw.githubusercontent.com/Lemoncode/fotos-ejemplos/main/cartas/copas/2_dos-copas.jpg";
-      alt = "Carta 2 de copas";
       break;
     case 3:
       urlCarta =
         "https://raw.githubusercontent.com/Lemoncode/fotos-ejemplos/main/cartas/copas/3_tres-copas.jpg";
-      alt = "Carta 3 de copas";
       break;
     case 4:
       urlCarta =
         "https://raw.githubusercontent.com/Lemoncode/fotos-ejemplos/main/cartas/copas/4_cuatro-copas.jpg";
-      alt = "Carta 4 de copas";
       break;
     case 5:
       urlCarta =
         "https://raw.githubusercontent.com/Lemoncode/fotos-ejemplos/main/cartas/copas/5_cinco-copas.jpg";
-      alt = "Carta 5 de copas";
       break;
     case 6:
       urlCarta =
         "https://raw.githubusercontent.com/Lemoncode/fotos-ejemplos/main/cartas/copas/6_seis-copas.jpg";
-      alt = "Carta 6 de copas";
       break;
     case 7:
       urlCarta =
         "https://raw.githubusercontent.com/Lemoncode/fotos-ejemplos/main/cartas/copas/7_siete-copas.jpg";
-      alt = "Carta 7 de copas";
       break;
     case 10:
       urlCarta =
         "https://raw.githubusercontent.com/Lemoncode/fotos-ejemplos/main/cartas/copas/10_sota-copas.jpg";
-      alt = "Carta 10 de copas";
       break;
     case 11:
       urlCarta =
         "https://raw.githubusercontent.com/Lemoncode/fotos-ejemplos/main/cartas/copas/11_caballo-copas.jpg";
-      alt = "Carta 11 de copas";
       break;
     case 12:
       urlCarta =
         "https://raw.githubusercontent.com/Lemoncode/fotos-ejemplos/main/cartas/copas/12_rey-copas.jpg";
-      alt = "Carta 12 de copas";
       break;
     default:
       console.log("Error");
       break;
   }
-  mostrarCarta(urlCarta, alt);
+  return urlCarta;
 };
 
-const mostrarCarta = (urlCarta: string, alt: string): void => {
+const mostrarCarta = (urlCarta: string): void => {
   const elementoCarta = document.getElementById("carta");
   if (elementoCarta && elementoCarta instanceof HTMLImageElement) {
     elementoCarta.src = urlCarta;
-    elementoCarta.alt = alt;
   }
 };
 
-//Sumar puntuacion
-const sumarPuntuacion = (carta: number): void => {
-  puntuacion = carta >= 10 ? puntuacion + 0.5 : puntuacion + carta;
-  muestraPuntuacion();
+const obtenerPuntuacionCarta = (carta: number): number => {
+  return carta > 7 ? 0.5 : carta;
 };
 
-//Game Over
+const sumarPuntuacion = (puntosCarta: number): number => {
+  return puntosCarta + puntuacion;
+};
+
+const actualizarPuntuacion = (puntosAActuilizar: number) => {
+  puntuacion = puntosAActuilizar;
+};
+
 const elementoTexto = document.getElementById("texto");
 const mostrarMensaje = (mensaje: string) => {
   if (elementoTexto) {
@@ -135,38 +135,54 @@ const desactivarBotones = (): void => {
     botonNuevaPartida.style.display = "block";
   }
 };
-const mensajeGanaste = (): void => {
+
+const gestionarPartida = (): void => {
+  if (puntuacion > MAXIMA_PUNTUACION) {
+    desactivarBotones();
+    mostrarMensaje("Has superado la puntuacion total.");
+  }
   if (puntuacion === MAXIMA_PUNTUACION) {
     desactivarBotones();
     mostrarMensaje("¡Lo has clavado! ¡Enhorabuena!");
   }
 };
-const gameOver = (): void => {
-  if (puntuacion > MAXIMA_PUNTUACION) {
-    desactivarBotones();
-    mostrarMensaje("Game Over");
-  }
-};
 //Me planto
-const mensajePlantarse = (): string => {
-  let mensajeSiSePlanta = "";
+const mensajeSiMePlanto = (): string => {
+  let mensaje = "";
   if (puntuacion < 4) {
-    mensajeSiSePlanta = "Has sido muy conservador";
+    mensaje = "Has sido muy conservador";
   }
   if (puntuacion === 5) {
-    mensajeSiSePlanta = "Te ha entrado el canguelo eh?";
+    mensaje = "Te ha entrado el canguelo eh?";
   }
   if (puntuacion === 6 || puntuacion === 7) {
-    mensajeSiSePlanta = "Casi casi...";
+    mensaje = "Casi casi...";
   }
 
-  return mensajeSiSePlanta;
+  return mensaje;
 };
-const plantarse = (): void => {
-  if (botonMostrarCartaSiHubieraSeguido instanceof HTMLButtonElement) {
+
+const botonMostrarCartaSiHubieraSeguido = document.getElementById(
+  "boton-supuesta-siguiente-carta"
+);
+const estadoBotonMostrarCartaSiHubieraSeguido = (estado: boolean): void => {
+  if (
+    estado &&
+    botonMostrarCartaSiHubieraSeguido instanceof HTMLButtonElement
+  ) {
     botonMostrarCartaSiHubieraSeguido.style.display = "block";
   }
-  mostrarMensaje(mensajePlantarse());
+  if (
+    !estado &&
+    botonMostrarCartaSiHubieraSeguido instanceof HTMLButtonElement
+  ) {
+    botonMostrarCartaSiHubieraSeguido.style.display = "none";
+  }
+};
+
+const mePlanto = (): void => {
+  estadoBotonMostrarCartaSiHubieraSeguido(true);
+  mostrarMensaje(mensajeSiMePlanto());
 };
 
 const botonPlantarse = document.getElementById("plantarse");
@@ -174,7 +190,7 @@ const botonPlantarse = document.getElementById("plantarse");
 if (botonPlantarse instanceof HTMLButtonElement) {
   botonPlantarse.addEventListener("click", () => {
     desactivarBotones();
-    plantarse();
+    mePlanto();
   });
 }
 
@@ -191,24 +207,27 @@ const activarBotones = (): void => {
     elementoTexto.innerHTML = "";
   }
 };
-//Nueva partida
 const mostrarCataBocaAbajo = (): void => {
   const url =
     "https://raw.githubusercontent.com/Lemoncode/fotos-ejemplos/main/cartas/back.jpg";
-  const alt = "Carta boca abajo";
-  mostrarCarta(url, alt);
+  mostrarCarta(url);
 };
-const nuevaPartida = (): void => {
-  if (botonMostrarCartaSiHubieraSeguido instanceof HTMLButtonElement) {
-    botonMostrarCartaSiHubieraSeguido.style.display = "none";
-    botonMostrarCartaSiHubieraSeguido.disabled = false;
-  }
+
+const reiniciarPuntuacion = () => {
   puntuacion = 0;
   muestraPuntuacion();
+};
+
+//Nueva partida
+const nuevaPartida = (): void => {
+  reiniciarPuntuacion();
+  estadoBotonMostrarCartaSiHubieraSeguido(false);
   activarBotones();
   mostrarCataBocaAbajo();
 };
-botonNuevaPartida?.addEventListener("click", nuevaPartida);
+if (botonNuevaPartida instanceof HTMLButtonElement) {
+  botonNuevaPartida.addEventListener("click", nuevaPartida);
+}
 
 // Mostrar carta si no se hubiera plantado
 const mensajeSiHubierasSeguido = (): string => {
@@ -224,14 +243,15 @@ const mensajeSiHubierasSeguido = (): string => {
   return mensaje;
 };
 
-const mostrarCartaSiHubieraseguido = (): void => {
+const gestionarAccionSiHubieraSeguido = (): void => {
   dameCarta();
-  if (botonMostrarCartaSiHubieraSeguido instanceof HTMLButtonElement) {
-    botonMostrarCartaSiHubieraSeguido.disabled = true;
-  }
   mostrarMensaje(mensajeSiHubierasSeguido());
+  estadoBotonMostrarCartaSiHubieraSeguido(false);
 };
-botonMostrarCartaSiHubieraSeguido?.addEventListener(
-  "click",
-  mostrarCartaSiHubieraseguido
-);
+
+if (botonMostrarCartaSiHubieraSeguido instanceof HTMLButtonElement) {
+  botonMostrarCartaSiHubieraSeguido.addEventListener(
+    "click",
+    gestionarAccionSiHubieraSeguido
+  );
+}
