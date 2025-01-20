@@ -1,4 +1,4 @@
-import { partida } from "./modelo";
+import { partida, Estado, MAXIMA_PUNTUACION } from "./modelo";
 //Pedir carta
 export const cartaAleatoria = (): number => {
   let carta: number = Math.floor(Math.random() * 11);
@@ -17,7 +17,15 @@ export const dameNumeroCarta = (numeroAleatorio: number): number => {
   }
   return numeroAleatorio;
 };
-
+export const gestionarEstado = (): Estado => {
+  if (partida.puntuacion > MAXIMA_PUNTUACION) {
+    return "PARTIDA_PERDIDA";
+  }
+  if (partida.puntuacion === MAXIMA_PUNTUACION) {
+    return "PARTIDA_GANADA";
+  }
+  return "EN_CURSO";
+};
 export const obtenerUrlCarta = (carta: number): string => {
   let urlCarta = "";
   switch (carta) {

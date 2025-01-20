@@ -1,7 +1,8 @@
 interface Partida {
-    puntuacion: number;
-    
+  puntuacion: number;
 }
+
+export type Estado = "EN_CURSO" | "PARTIDA_PERDIDA" | "PARTIDA_GANADA";
 
 export const partida: Partida = {
   puntuacion: 0,
