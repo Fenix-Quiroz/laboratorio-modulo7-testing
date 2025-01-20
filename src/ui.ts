@@ -20,6 +20,12 @@ export const gestionarUrlCarta = (carta: number) => {
     const urlCarta = obtenerUrlCarta(carta);
     mostrarCarta(urlCarta);
 }
+export const mostrarCarta = (urlCarta: string): void => {
+    const elementoCarta = document.getElementById("carta");
+    if (elementoCarta && elementoCarta instanceof HTMLImageElement) {
+      elementoCarta.src = urlCarta;
+    }
+};
 export const dameCarta = (): void => {
     const numeroAleatorio = cartaAleatoria();
     const carta = dameNumeroCarta(numeroAleatorio);
@@ -31,12 +37,6 @@ export const dameCarta = (): void => {
     gestionarPartida();
 };
   
-export const mostrarCarta = (urlCarta: string): void => {
-    const elementoCarta = document.getElementById("carta");
-    if (elementoCarta && elementoCarta instanceof HTMLImageElement) {
-      elementoCarta.src = urlCarta;
-    }
-};
 
 export const mostrarMensaje = (mensaje: string) => {
     const elementoTexto = document.getElementById("texto");

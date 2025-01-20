@@ -1,2 +1,2 @@
-# Laboratorio Modulo 5 - Condicionales
-## Juego de las siete media
+# Laboratorio Modulo 6 - IMPORTS
+## Juego de las siete y  media

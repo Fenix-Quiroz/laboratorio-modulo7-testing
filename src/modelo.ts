@@ -1,5 +1,6 @@
 interface Partida {
-  puntuacion: number;
+    puntuacion: number;
+    
 }
 
 export const partida: Partida = {
