@@ -4,7 +4,9 @@ import {
   gestionarAccionSiHubieraSeguido,
   muestraPuntuacion,
   nuevaPartida,
-} from "./ui";
+} from "./ui"; 
+
+
 const botonNuevaPartida = document.getElementById("nueva-partida");
 
 document.addEventListener("DOMContentLoaded", muestraPuntuacion);
